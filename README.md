@@ -1,6 +1,12 @@
-# Agent Review Gate (lite) for Claude Code
+# claude-review-gate
 
-A small, free set of plain-markdown skills and subagents for Claude Code: a review gate so nothing is reported or merged until a fresh reviewer has checked it, and a role-builder to design new agent roles. No install, no runtime, no dependencies.
+A review gate for Claude Code subagents. Before an agent reports work or merges it, a fresh, read-only reviewer checks it against the brief and returns `Verdict: ship | fix | hold`. One fix pass is allowed; a second `fix` becomes `hold`.
+
+Plain markdown skills and agents. Copy one folder, no runtime, no dependencies. MIT.
+
+Works with: Claude Code subagents and skills (`.claude/agents`, `.claude/skills`).
+
+Status: v0.1, issues welcome.
 
 ## What is in it
 
@@ -8,6 +14,10 @@ A small, free set of plain-markdown skills and subagents for Claude Code: a revi
 - `reviewer` agent: a fresh, read-only reviewer that returns `Verdict: ship | fix | hold`.
 - `checker` agent: a small Haiku agent for one read-only check.
 - `role-builder` skill + `template.md`: a guided way to design a good agent role.
+
+## Why not just a pack of subagents?
+
+Most subagent collections give you more specialists. This one adds a check on their output. The reviewer gets the brief, the acceptance criteria and the output paths, not the author's reasoning, so it cannot grade its own homework. The verdict is fixed (ship, fix or hold), findings are capped at five and ranked, and the fix loop is capped at one pass. It sits alongside whatever agents you already use.
 
 ## 60-second install
 
@@ -20,6 +30,16 @@ Works the same on macOS, Linux and Windows. Nothing here runs scripts.
 ## Using the review gate
 
 Ask for it in a brief ("follow report-up-chain") or just say "have a reviewer check this before you report". A fresh `reviewer` gets the brief, the acceptance criteria and the output paths, not the author's reasoning, and returns a first line of `Verdict: ship`, `fix` or `hold`, then at most five ranked findings. One fix pass is allowed; a second `fix` counts as `hold`. The receiving lead or orchestrator then appends `REVIEW <team> <verdict>` to `team-log.md`.
+
+Example reviewer output:
+
+```
+Verdict: fix
+Blocking scripts/backup.sh:12: rm -rf $DEST/* runs unquoted; quote it and abort if $DEST is empty.
+Should-fix docs/usage.md:30: documents a --dry-run flag the script does not parse; add the flag or remove the line.
+Test gaps: no test covers an empty $DEST.
+Not ready: the unquoted delete can remove the wrong directory.
+```
 
 ## Using the role-builder
 
