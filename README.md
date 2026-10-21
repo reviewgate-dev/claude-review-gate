@@ -41,6 +41,8 @@ Test gaps: no test covers an empty $DEST.
 Not ready: the unquoted delete can remove the wrong directory.
 ```
 
+A full worked case (fix, one fix pass, ship) is in [examples/](examples/).
+
 ## Using the role-builder
 
 Say "use role-builder to design a role for ..." and describe the job. It walks through the parts of a good role and fills in `template.md`, so the result is a subagent file you can drop into `.claude/agents/`.
